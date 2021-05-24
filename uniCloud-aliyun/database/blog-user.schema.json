@@ -1,0 +1,59 @@
+// 文档教程: https://uniapp.dcloud.net.cn/uniCloud/schema
+{
+	"bsonType": "object",
+	"required": ["userName", "password", "nickName"],
+	"permission": {
+		"read": false,
+		"create": false,
+		"update": false,
+		"delete": false
+	},
+	"properties": {
+		"_id": {
+			"description": "ID，系统自动生成"
+		},
+		"userName": {
+			"title": "用户名",
+			"bsonType": "string",
+			"trim": "both",
+			"description": "唯一"
+		},
+		"password": {
+			"title": "密码",
+			"bsonType": "string",
+			"trim": "both",
+			"description": "唯一"
+		},
+		"nickName": {
+			"title": "昵称",
+			"bsonType": "string",
+			"trim": "both",
+			"description": "唯一"
+		},
+		"gender": {
+			"title": "性别",
+			"bsonType": "int",
+			"trim": "both",
+			"description": "性别012，3默认",
+			"defaultValue": "0"
+		},
+		"picture": {
+			"title": "头像",
+			"bsonType": "string",
+			"trim": "both",
+			"description": "头像地址"
+		},
+		"city": {
+			"title": "城市",
+			"bsonType": "string",
+			"trim": "both"
+		},
+		"email": {
+			"bsonType": "string",
+			"format": "email",
+			"title": "邮箱",
+			"description": "邮箱地址",
+			"trim": "both"
+		}
+	}
+}
