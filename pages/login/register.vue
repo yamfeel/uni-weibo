@@ -5,6 +5,14 @@
 				<u-form-item prop="userName" label-width="0" style="height: 120rpx;">
 					<u-input v-model="form.userName" placeholder="请输入昵称" :border="true" />
 				</u-form-item>
+				<u-form-item label="性别">
+					<u-radio-group v-model="form.sex" style="height: 120rpx;">
+						<u-radio v-for="(item, index) in form.sexList" :key="index" :name="item.name"
+							:disabled="item.disabled">
+							{{ item.name }}
+						</u-radio>
+					</u-radio-group>
+				</u-form-item>
 				<u-form-item prop="email" label-width="0" style="height: 120rpx;">
 					<u-input v-model="form.email" placeholder="请输入邮箱" :border="true" />
 				</u-form-item>
@@ -34,6 +42,20 @@
 					email: '',
 					password: '',
 					password2: '',
+					sexList: [{
+							name: '男',
+							disabled: false
+						},
+						{
+							name: '女',
+							disabled: false
+						},
+						{
+							name: '保密',
+							disabled: false
+						}
+					],
+					sex: ''
 				},
 				removeName: false,
 				type: 'password',
@@ -107,9 +129,25 @@
 			submit() {
 				this.$refs.uForm.validate(valid => {
 					if (valid) {
-						console.log('验证通过');
+						console.log('tongguo')
+						uniCloud.callFunction({
+							name: 'bcloud',
+							data: {
+								action: 'router/user/register',
+								data: this.form
+							}
+						}).then(res => {
+							console.log(res.result)
+							if (res.result.errno == 10003) {
+								// this.removeName = true
+							} else {
+								// this.removeName = false
+							}
+						}).cache(err => {
+							console.log(err)
+						})
 					} else {
-						console.log('验证失败');
+						console.log('验证失败')
 					}
 				});
 			},
