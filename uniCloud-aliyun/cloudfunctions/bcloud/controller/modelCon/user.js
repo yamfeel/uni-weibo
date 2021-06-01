@@ -14,6 +14,7 @@ const {
 	registerFailInfo
 } = require("../../model/ErrorInfo.js")
 
+const doCrypto = require('../../utils/cryp.js')
 
 /**
  * 用户名是否存在
@@ -57,14 +58,13 @@ async function register({
 	
 	try {
 		await this.service.user.createUser({
-			userName, password, gender, email
+			userName, password: doCrypto(password), gender, email
 		})
 		return new SuccessModel()
 	} catch (ex) {
 		console.error(ex.message, ex.stack)
 		return new ErrorModel(registerFailInfo)
 	}
-	return 'asdf'
 }
 
 module.exports = {

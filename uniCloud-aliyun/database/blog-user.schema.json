@@ -34,7 +34,7 @@
 			"title": "性别",
 			"bsonType": "int",
 			"trim": "both",
-			"description": "性别012，3默认",
+			"description": "性别012，0默认",
 			"defaultValue": "0"
 		},
 		"picture": {

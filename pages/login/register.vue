@@ -26,6 +26,7 @@
 				</u-form-item>
 			</u-form>
 			<u-button @click="submit" style="margin-top: 30rpx;">注册</u-button>
+			<u-toast ref="uToast" />
 		</view>
 	</view>
 </template>
@@ -127,19 +128,34 @@
 		},
 		methods: {
 			submit() {
+				let {
+					userName,
+					email,
+					password,
+					sex
+				} = this.form
+				sex = sex == '男' ? 1 : sex == '女' ? 2 : 0
 				this.$refs.uForm.validate(valid => {
 					if (valid) {
-						console.log('tongguo')
 						uniCloud.callFunction({
 							name: 'bcloud',
 							data: {
 								action: 'router/user/register',
-								data: this.form
+								data: {
+									userName,
+									email,
+									password,
+									gender: sex
+								}
 							}
 						}).then(res => {
 							console.log(res.result)
-							if (res.result.errno == 10003) {
-								// this.removeName = true
+							if (res.result.errno == 0) {
+								this.$refs.uToast.show({
+									title: '注册成功',
+									type: 'success',
+									url: '/pages/login/login'
+								})
 							} else {
 								// this.removeName = false
 							}

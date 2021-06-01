@@ -51,7 +51,7 @@ module.exports = class UserService extends(
 	async createUser({
 		userName,
 		password,
-		gender = 3,
+		gender = 2,
 		email
 	}) {
 		const collerction = this.db.collection('blog-user')
