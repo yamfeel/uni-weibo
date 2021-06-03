@@ -31,7 +31,7 @@ module.exports = class UserService extends(
 
 		// 查询
 		const collerction = this.db.collection('blog-user')
-		const result = await collerction.where(whereOpt).get()
+		const result = await collerction.where(whereOpt).field({'password':false}).get()
 		if (result == null) {
 			// 未找到
 			return result

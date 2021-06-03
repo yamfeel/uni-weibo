@@ -11,7 +11,8 @@ const {
 const {
 	registerUserNameNotExistInfo,
 	registerUserNameExistInfo,
-	registerFailInfo
+	registerFailInfo,
+	loginFailInfo
 } = require("../../model/ErrorInfo.js")
 
 const doCrypto = require('../../utils/cryp.js')
@@ -37,7 +38,7 @@ async function isExist(userName) {
 }
 
 /**
- * @param {string} userNamw 
+ * @param {string} userName 
  * @param {string} password 
  * @param {number} gender 
  * @param {string} email 
@@ -60,14 +61,33 @@ async function register({
 		await this.service.user.createUser({
 			userName, password: doCrypto(password), gender, email
 		})
-		return new SuccessModel()
+		return new SuccessModel(password)
 	} catch (ex) {
 		console.error(ex.message, ex.stack)
 		return new ErrorModel(registerFailInfo)
 	}
 }
 
+/**
+ * 登录
+ * @param {String} userName 用户名
+ * @param {String} password 密码
+ */
+async function login(userName, password) {
+	const userInfo = await this.service.user.getUserInfo(userName, doCrypto(password))
+	if (userInfo.affectedDocs != 1) {
+		// 没有用户信息，登录失败
+		return new ErrorModel(loginFailInfo)
+	}
+	if (userInfo.affectedDocs == 1) {
+		const {userName, gender, email} = userInfo.data[0]
+		return new SuccessModel({userName, gender, email} = userInfo.data[0])
+		// 需要解构
+	}
+}
+
 module.exports = {
 	isExist,
-	register
+	register,
+	login
 }

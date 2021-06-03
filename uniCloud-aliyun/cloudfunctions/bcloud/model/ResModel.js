@@ -6,8 +6,8 @@
  * 基础模块
  */
 class BaseModel {
-	constructor({errno, data, message}) {
-	    this.errno = errno
+	constructor({code, data, message}) {
+	    this.code = code
 		if (data) this.data = data
 		if (message) this.message = message
 	}
@@ -17,7 +17,7 @@ class BaseModel {
 class SuccessModel extends BaseModel {
 	constructor(data = {}) {
 	    super({
-			errno: 0,
+			code: 0,
 			data
 		})
 	}
@@ -25,9 +25,9 @@ class SuccessModel extends BaseModel {
 
 // 失败的数据模型
 class ErrorModel extends BaseModel {
-	constructor({ errno, message }) {
+	constructor({ code, message }) {
 	    super({
-			errno,
+			code,
 			message
 		})
 	}
