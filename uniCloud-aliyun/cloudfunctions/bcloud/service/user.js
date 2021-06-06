@@ -31,7 +31,12 @@ module.exports = class UserService extends(
 
 		// 查询
 		const collerction = this.db.collection('blog-user')
-		const result = await collerction.where(whereOpt).field({'password':false}).get()
+		const result = await collerction.where(whereOpt).field({
+			'userName': true,
+			'email': true,
+			'gender': true,
+			'token': true,
+			}).get()
 		if (result == null) {
 			// 未找到
 			return result
@@ -43,6 +48,7 @@ module.exports = class UserService extends(
 	}
 
 	/**
+	 * 注册新用户
 	 * @param {string} userName 
 	 * @param {string} password 
 	 * @param {number} gender 
@@ -59,7 +65,25 @@ module.exports = class UserService extends(
 			userName,
 			password,
 			gender,
-			email
+			email,
+			'register_date': Date.now(),
+			'register_ip': this.ctx.context.CLIENTIP
 		})
+		return result
+	}
+	
+	/**
+	 * 设置token
+	 * @param {String} doc
+	 * @param {String} token
+	 */
+	async updateToken(id, token) {
+		const collerction = this.db.collection('blog-user')
+		const result = await collerction.doc(id).update({
+			'token': token,
+			'last_login_date': Date.now(),
+			'last_login_ip': this.ctx.context.CLIENTIP
+		})
+		return result
 	}
 }

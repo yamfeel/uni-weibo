@@ -23,4 +23,8 @@ module.exports = class UserController extends (
 		const data = await loginCon.call(this, userName, password)
 		return data
 	}
+	
+	async userTest() {
+		return {code:0, message:'中间件成功', data:this.ctx.data}
+	}
 }

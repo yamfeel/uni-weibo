@@ -19,8 +19,7 @@ function genValidator(validateFn) {
 		const error = validateFn(data)
 		if (error) {
 			// 验证失败
-			const result = new ErrorModel(jsonSchemaFileInfo)
-			throw result
+			throw new ErrorModel(jsonSchemaFileInfo)
 			// throw error
 		}
 		// 验证成功继续

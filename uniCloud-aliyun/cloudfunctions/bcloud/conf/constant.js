@@ -3,5 +3,6 @@
  */
 
 module.exports = {
-	DEFAULT_PICTURE: 'https://dwz.cn.rnTnftZs'
+	DEFAULT_PICTURE: 'https://dwz.cn.rnTnftZs',
+	USER_PORT_NUM: 3
 }

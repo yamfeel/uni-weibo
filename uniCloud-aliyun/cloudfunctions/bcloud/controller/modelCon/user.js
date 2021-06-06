@@ -1,6 +1,5 @@
 /**
- * @description  user controller
- * @auther yukee
+ * @description user controller
  */
 
 // const UserService = require("../../service/user.js")
@@ -14,6 +13,11 @@ const {
 	registerFailInfo,
 	loginFailInfo
 } = require("../../model/ErrorInfo.js")
+
+
+const {
+	jwtSign
+} = require("../../utils/_jwt.js")
 
 const doCrypto = require('../../utils/cryp.js')
 
@@ -56,10 +60,13 @@ async function register({
 		// { errno:0, data: {...}}
 	}
 	// 不存在,注册 service
-	
+
 	try {
 		await this.service.user.createUser({
-			userName, password: doCrypto(password), gender, email
+			userName,
+			password: doCrypto(password),
+			gender,
+			email
 		})
 		return new SuccessModel(password)
 	} catch (ex) {
@@ -80,9 +87,25 @@ async function login(userName, password) {
 		return new ErrorModel(loginFailInfo)
 	}
 	if (userInfo.affectedDocs == 1) {
-		const {userName, gender, email} = userInfo.data[0]
-		return new SuccessModel({userName, gender, email} = userInfo.data[0])
-		// 需要解构
+		const {
+			userName,
+			gender,
+			email
+		} = userInfo.data[0]
+		const token = await jwtSign({
+			userName: userName,
+			login_ip: this.ctx.context.CLIENTIP
+		}, '7days')
+		const result = await this.service.user.updateToken(userInfo.data[0]._id, token.split('.')[2])
+		// setToken({userInfo:data}); jwtSign打包数据并签发，存放token[2]到数据库，返回token
+		return new SuccessModel({
+			userInfo: {
+				userName,
+				gender,
+				email
+			},
+			token
+		})
 	}
 }
 
