@@ -3,7 +3,7 @@
  * @author yukee
  */
 
-const { DEFAULT_PICRTURE } = require("../conf/constant.js")
+const { DEFAULT_PICTURE } = require("../conf/constant.js")
 
 /**
  * 用户默认头像
@@ -11,7 +11,7 @@ const { DEFAULT_PICRTURE } = require("../conf/constant.js")
  */
 function _formatUserPicture(obj) {
 	if (obj.picture == null) {
-		obj.picture = DEFAULT_PICRTURE
+		obj.picture = DEFAULT_PICTURE
 	}
 	return obj
 }

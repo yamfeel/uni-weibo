@@ -25,7 +25,7 @@ async function loginCheck(ctx, next) {
 		if(token.split('.')[2] != result.data[0]) return new ErrorModel(loginCheckFailInfo)
 	}
 
-	// 3. token
+	// 3. 检测token剩余2天有效期时自动更新
 	if (userInfo.exp - userInfo.iat < 3600 * 24 * 2) {
 		const collection = uniCloud.database().collection('blog-user')
 		const payload = {

@@ -82,12 +82,12 @@
 						validator: (rule, value, callback) => {
 							// 上面有说，返回true表示校验通过，返回false表示不通过
 							// this.$u.test.mobile()就是返回true或者false的
-							console.log(this.removeName)
+							// console.log(this.removeName)
 							return this.removeName;
 						},
 						message: '用户名已存在',
 						// 触发器可以同时用blur和change
-						trigger: ['blur'],
+						trigger: ['blur','change'],
 					}],
 					password: [{
 						required: true,
@@ -150,7 +150,7 @@
 							}
 						}).then(res => {
 							console.log(res.result)
-							if (res.result.errno == 0) {
+							if (res.result.code == 0) {
 								this.$refs.uToast.show({
 									title: '注册成功',
 									type: 'success',
@@ -178,7 +178,7 @@
 					}
 				}).then(res => {
 					console.log(res.result)
-					if (res.result.errno == 10003) {
+					if (res.result.code == 10003) {
 						this.removeName = true
 					} else {
 						this.removeName = false

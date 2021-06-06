@@ -33,7 +33,6 @@
 		"gender": {
 			"title": "性别",
 			"bsonType": "int",
-			"trim": "both",
 			"description": "性别012，0默认",
 			"defaultValue": "0"
 		},
@@ -54,6 +53,38 @@
 			"title": "邮箱",
 			"description": "邮箱地址",
 			"trim": "both"
+		},
+		"portNum": {
+			"title": "端口数",
+			"bsonType": "int",
+			"description": "默认0",
+			"defaultValue": "0"
+		},
+		"token": {
+			"title": "令牌",
+			"bsonType": "string",
+			"trim": "both",
+			"description": "最近一次登录生成的token",
+			"defaultValue": "0"
+		},
+		"login_log": {
+			"title": "登录日志",
+			"bsonType": "object",
+			"description": "[{login_date，login_ip}]头部与尾部相隔不大于一年"
+		},
+		"register_date": {
+			"bsonType": "timestamp",
+			"description": "注册时间",
+			"defaultValue": {
+				"$env": "now"
+			}
+		},
+		"register_ip": {
+			"bsonType": "string",
+			"description": "注册时 IP 地址",
+			"defaultValue": {
+				"$env": "clientIP"
+			}
 		}
 	}
 }

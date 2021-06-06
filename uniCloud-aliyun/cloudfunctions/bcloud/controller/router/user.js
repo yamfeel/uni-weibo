@@ -25,6 +25,6 @@ module.exports = class UserController extends (
 	}
 	
 	async userTest() {
-		return {code:0, message:'中间件成功', data:this.ctx.data}
+		return {code:0, message:'中间件成功', data:this.ctx.data.token}
 	}
 }

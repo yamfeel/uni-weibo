@@ -3,10 +3,10 @@
 		<view class="login_box">
 			<u-form :model="form" ref="uForm">
 				<u-form-item prop="userName" label-width="0" style="height: 120rpx;">
-					<u-input v-model="form.userName" placeholder="请输入邮箱" :border="true"/>
+					<u-input v-model="form.userName" placeholder="请输入用户名" :border="true"/>
 				</u-form-item>
-				<u-form-item prop="passwrod" label-width="0" style="height: 120rpx;">
-					<u-input v-model="form.passwrod" placeholder="请输入密码" :type="type" :maxlength="16" :border="true" :clearable="false"/>
+				<u-form-item prop="password" label-width="0" style="height: 120rpx;">
+					<u-input v-model="form.password" placeholder="请输入密码" :type="type" :maxlength="16" :border="true" :clearable="false"/>
 				</u-form-item>
 			</u-form>
 			<u-button @click="submit" style="margin-top: 30rpx;">登录</u-button>
@@ -16,27 +16,25 @@
 </template>
 
 <script>
+	import { mapGetters, mapMutations } from 'vuex'
 	export default {
 		data() {
 			return {
 				form: {
 					userName: '',
-					passwrod: ''
+					password: ''
 				},
 				type: 'password',
 				border: true,
 				rules: {
 					userName: [{
-						validator: (rule, value, callback) => {
-							// 上面有说，返回true表示校验通过，返回false表示不通过
-							// this.$u.test.mobile()就是返回true或者false的
-							return this.$u.test.email(value);
-						},
-						message: '邮箱格式不对',
+						min: 5,
+						max: 16,
+						message: '长度在5-16个字符之间',
 						// 触发器可以同时用blur和change
-						trigger: ['change', 'blur'],
+						trigger: ['blur']
 					}],
-					passwrod: [{
+					password: [{
 						required: true,
 						message: '请输入密码',
 						trigger: ['change', 'blur']
@@ -44,11 +42,48 @@
 				}
 			}
 		},
+		computed: {
+			...mapGetters('user', [
+				'GET_TOKEN',
+				'GET_USER_INFO'
+			])
+		},
 		methods: {
+			...mapMutations('user',[
+				'SET_TOKEN',
+				'SET_USER_INFO',
+				'REMOVE_TOKEN'
+			]),
 			submit() {
+				// this.SET_TOKEN()
+				this.REMOVE_TOKEN()
+				// console.log(this.GET_TOKEN)
 				this.$refs.uForm.validate(valid => {
 					if (valid) {
 						console.log('验证通过');
+						uniCloud.callFunction({
+							name: 'bcloud',
+							data: {
+								action: 'router/user/login',
+								data: {
+									userName: this.form.userName,
+									password: this.form.password
+								}
+							}
+						}).then(res => {
+							if (res.result.code == 0) {
+								const data = res.result.data
+								console.log('res',res.result)
+								this.SET_USER_INFO(data.userInfo)
+								this.SET_TOKEN(data.token)
+								console.log('sd',this.GET_USER_INFO)
+								uni.switchTab({
+								    url: '/pages/index/index?test=1'
+								})
+							} else {
+								console.log('error',res.result)
+							}
+						})
 					} else {
 						console.log('验证失败');
 					}

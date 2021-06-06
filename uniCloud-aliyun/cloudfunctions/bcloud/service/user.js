@@ -36,6 +36,7 @@ module.exports = class UserService extends(
 			'email': true,
 			'gender': true,
 			'token': true,
+			'picture': true
 			}).get()
 		if (result == null) {
 			// 未找到
@@ -43,8 +44,8 @@ module.exports = class UserService extends(
 		}
 
 		// 格式化
-		const formatRes = formatUser(result)
-		return formatRes
+		result.data = formatUser(result.data)
+		return result
 	}
 
 	/**

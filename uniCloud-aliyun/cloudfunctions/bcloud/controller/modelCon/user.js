@@ -90,7 +90,8 @@ async function login(userName, password) {
 		const {
 			userName,
 			gender,
-			email
+			email,
+			picture
 		} = userInfo.data[0]
 		const token = await jwtSign({
 			userName: userName,
@@ -99,11 +100,13 @@ async function login(userName, password) {
 		const result = await this.service.user.updateToken(userInfo.data[0]._id, token.split('.')[2])
 		// setToken({userInfo:data}); jwtSign打包数据并签发，存放token[2]到数据库，返回token
 		return new SuccessModel({
-			userInfo: {
-				userName,
-				gender,
-				email
-			},
+			userInfo: userInfo.data[0],
+			// userInfo: {
+			// 	userName,
+			// 	gender,
+			// 	email,
+			// 	picture
+			// },
 			token
 		})
 	}

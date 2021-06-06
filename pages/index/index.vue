@@ -3,35 +3,40 @@
 		<image class="logo" src="/static/logo.png"></image>
 		<view class="text-area">
 			<text class="title">{{title}}</text>
+			
 		</view>
 	</view>
 </template>
 
 <script>
+	import { mapState } from 'vuex'
 	export default {
 		data() {
 			return {
 				title: 'Hello'
 			}
 		},
-		onLoad() {
-			uni.getStorage({
-				key: 'userId'
-			}).then(res => {
-				let userId = res.data
-				if (userId) {
-					// 校验用户名
-				} else {
-					// 用户不存在，跳转注册登录页面
-					console.log('用户名不存在')
-					let pages = getCurrentPages()
-					console.log(pages[pages.length - 1].route)
-					uni.navigateTo({
-						url: '../login/login'
-					})
+		onShow(option) {
+			uniCloud.callFunction({
+				name: 'bcloud',
+				data: {
+					action: 'router/user/userTest',
+					data: {
+						token: this.token
+					}
 				}
+			}).then(res => {
+				console.log('token',this.token)
+				console.log(res.result)
+				
 			})
 
+		},
+		computed: {
+			...mapState('user',[
+				'userInfo',
+				'token'
+			])
 		},
 		methods: {
 

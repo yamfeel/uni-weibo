@@ -21,17 +21,74 @@
 		{
 			"path": "pages/login/register",
 			"style": {
-				"navigationBarTitleText": "",
 				"navigationBarTitleText": "注册",
 				"enablePullDownRefresh": false
 			}
 
 		}
-	],
+	    ,{
+            "path" : "pages/user/user",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "我的",
+                "enablePullDownRefresh": false
+            }
+            
+        },{
+            "path" : "pages/user/user-info",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "个人信息",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/blog/blog",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        },
+		{
+			"path": "uview-ui/components/u-avatar-cropper/u-avatar-cropper",
+			"style": {
+				"navigationBarTitleText": "头像裁剪",
+				"navigationBarBackgroundColor": "#000000"
+			}
+		}
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+		"color": "#909399",
+		"selectedColor": "#303133",
+		"backgroundColor": "#FFFFFF",
+		"borderStyle": "black",
+		"list": [{
+				"pagePath": "pages/index/index",
+				"iconPath": "static/common/tabbar/component.png",
+				"selectedIconPath": "static/common/tabbar/component_select.png",
+				"text": "首页"
+			},
+			{
+				"pagePath": "pages/blog/blog",
+				"iconPath": "static/common/tabbar/js.png",
+				"selectedIconPath": "static/common/tabbar/js_select.png",
+				"text": "互助"
+			},
+			{
+				"pagePath": "pages/user/user",
+				"iconPath": "static/common/tabbar/template.png",
+				"selectedIconPath": "static/common/tabbar/template_select.png",
+				"text": "我的"
+			}
+		]
 	}
 }
