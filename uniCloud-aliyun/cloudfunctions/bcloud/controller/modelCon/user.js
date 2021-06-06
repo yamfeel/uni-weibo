@@ -1,6 +1,5 @@
 /**
- * @description  user controller
- * @auther yukee
+ * @description user controller
  */
 
 // const UserService = require("../../service/user.js")
@@ -11,8 +10,14 @@ const {
 const {
 	registerUserNameNotExistInfo,
 	registerUserNameExistInfo,
-	registerFailInfo
+	registerFailInfo,
+	loginFailInfo
 } = require("../../model/ErrorInfo.js")
+
+
+const {
+	jwtSign
+} = require("../../utils/_jwt.js")
 
 const doCrypto = require('../../utils/cryp.js')
 
@@ -37,7 +42,7 @@ async function isExist(userName) {
 }
 
 /**
- * @param {string} userNamw 
+ * @param {string} userName 
  * @param {string} password 
  * @param {number} gender 
  * @param {string} email 
@@ -55,19 +60,57 @@ async function register({
 		// { errno:0, data: {...}}
 	}
 	// 不存在,注册 service
-	
+
 	try {
 		await this.service.user.createUser({
-			userName, password: doCrypto(password), gender, email
+			userName,
+			password: doCrypto(password),
+			gender,
+			email
 		})
-		return new SuccessModel()
+		return new SuccessModel(password)
 	} catch (ex) {
 		console.error(ex.message, ex.stack)
 		return new ErrorModel(registerFailInfo)
 	}
 }
 
+/**
+ * 登录
+ * @param {String} userName 用户名
+ * @param {String} password 密码
+ */
+async function login(userName, password) {
+	const userInfo = await this.service.user.getUserInfo(userName, doCrypto(password))
+	if (userInfo.affectedDocs != 1) {
+		// 没有用户信息，登录失败
+		return new ErrorModel(loginFailInfo)
+	}
+	if (userInfo.affectedDocs == 1) {
+		const {
+			userName,
+			gender,
+			email
+		} = userInfo.data[0]
+		const token = await jwtSign({
+			userName: userName,
+			login_ip: this.ctx.context.CLIENTIP
+		}, '7days')
+		const result = await this.service.user.updateToken(userInfo.data[0]._id, token.split('.')[2])
+		// setToken({userInfo:data}); jwtSign打包数据并签发，存放token[2]到数据库，返回token
+		return new SuccessModel({
+			userInfo: {
+				userName,
+				gender,
+				email
+			},
+			token
+		})
+	}
+}
+
 module.exports = {
 	isExist,
-	register
+	register,
+	login
 }

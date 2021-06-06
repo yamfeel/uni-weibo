@@ -9,6 +9,8 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
+		"ajv": "^8.5.0",
+		"jsonwebtoken": "^8.5.1",
 		"uni-cloud-router": "file:../../../uni_modules/uni-cloud-router/uniCloud/cloudfunctions/common/uni-cloud-router"
 	}
 }

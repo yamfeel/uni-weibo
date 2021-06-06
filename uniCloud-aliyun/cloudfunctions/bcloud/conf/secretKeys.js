@@ -4,5 +4,5 @@
 
 module.exports = {
 	CREYPTO_SECRET_KEY: 'SD12341e_@uni',
-	SESSION_SECRET_KEY: 'SD12331r_@uni'
+	TOKEN_SECRET_KEY: 'Nid9_fo34hEEe'
 }
