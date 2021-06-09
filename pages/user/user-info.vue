@@ -9,23 +9,23 @@
 			<u-cell-group>
 				<u-cell-item :icon="'camera-fill'" :title="'修改头像'" hover-class="cell-hover-class" @click="chooseAvatar">
 				</u-cell-item>
-				<u-cell-item :icon="'account'" :title="'修改昵称'" hover-class="cell-hover-class" @click="showNickName"></u-cell-item>
-				<u-cell-item :icon="'lock'" :title="'修改密码'" hover-class="cell-hover-class" @click="showPassword"></u-cell-item>
+				<u-cell-item :icon="'account'" :title="'修改昵称'" hover-class="cell-hover-class" @click="showNickName">
+				</u-cell-item>
+				<u-cell-item :icon="'lock'" :title="'修改密码'" hover-class="cell-hover-class" @click="showPassword">
+				</u-cell-item>
 			</u-cell-group>
 		</view>
 		<u-popup v-model="show" mode="bottom" length="60%" :closeable="true" close-icon="close-circle">
 			<view v-show="nickNameModify" class="modify" style="margin: 50rpx; margin-top: 120rpx;">
-				<u-input placeholder="请输入昵称" v-model="value" type="text" :border="true"
-					:clearable="false" />
+				<u-input placeholder="请输入昵称" v-model="value" type="text" :border="true" :clearable="false" />
 				<u-button @click="submit" style="margin-top: 30rpx;">保存</u-button>
 			</view>
 			<view v-show="passwordModify" class="modify" style="margin: 50rpx; margin-top: 120rpx;">
-				<u-input placeholder="请输入旧密码" v-model="pwd.oldPwd" type="password" :border="true"
-					:clearable="false" />
-				<u-input placeholder="请输入新密码" v-model="pwd.newPwd" type="password" :border="true" style="margin-top: 30rpx;"
-					:clearable="false" />
-				<u-input placeholder="请重复输入密码" v-model="pwd.rePwd" type="password" :border="true" style="margin-top: 30rpx;"
-					:clearable="false" />
+				<u-input placeholder="请输入旧密码" v-model="pwd.oldPwd" type="password" :border="true" :clearable="false" />
+				<u-input placeholder="请输入新密码" v-model="pwd.newPwd" type="password" :border="true"
+					style="margin-top: 30rpx;" :clearable="false" />
+				<u-input placeholder="请重复输入密码" v-model="pwd.rePwd" type="password" :border="true"
+					style="margin-top: 30rpx;" :clearable="false" />
 				<u-button @click="submit" style="margin-top: 30rpx;">修改</u-button>
 			</view>
 		</u-popup>
@@ -60,20 +60,31 @@
 				'GET_GENDER_ICON'
 			]),
 		},
-		onShow() {
+		onLoad() {
 			if (this.avatar == '') this.avatar = this.userInfo.picture
 			// 监听从裁剪页发布的事件，获得裁剪结果
-			uni.$on('uAvatarCropper', path => {
-				this.avatar = path;
+			uni.$off('uAvatarCropper')
+			uni.$on('uAvatarCropper', async filePath => {
+				this.avatar = filePath;
 				// 可以在此上传到服务端
-				uni.uploadFile({
-					url: 'http://www.example.com/upload',
-					filePath: path,
-					name: 'file',
-					complete: (res) => {
-						console.log(res);
+				const result = await uniCloud.uploadFile({
+					filePath: filePath,
+					cloudPath: Date.now() + Math.random().toString(16).split('.')[1] + '.jpg',
+					onUploadProgress: function(progressEvent) {
+						console.log(progressEvent)
+						let percentCompleted = Math.round(
+							(progressEvent.loaded * 100) / progressEvent.total
+						)
 					}
-				});
+				})
+				console.log(result)
+				const delImg = await uniCloud.deleteFile({
+					fileList: [
+						// result.fileID,
+						'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-cbbd44a2-cab9-4a4f-ad23-df7212f0bced/68b4e28c-674e-46b1-91b4-c52236f319d9.jpg'
+					]
+				})
+				console.log('del',delImg)
 			})
 		},
 		methods: {

@@ -14,6 +14,7 @@ async function loginCheck(ctx, next) {
 	// 1. 验证token是否过有效期，过期则返回错误信息
 	try {
 		userInfo = await jwtVerify(token)
+		ctx.userInfo = userInfo
 	} catch (ex) {
 		throw new ErrorModel(loginCheckFailInfo)
 	}

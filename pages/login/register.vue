@@ -3,7 +3,7 @@
 		<view class="register_box">
 			<u-form :model="form" ref="uForm">
 				<u-form-item prop="userName" label-width="0" style="height: 120rpx;">
-					<u-input v-model="form.userName" placeholder="请输入昵称" :border="true" />
+					<u-input v-model="form.userName" placeholder="请输入用户名" :border="true" />
 				</u-form-item>
 				<u-form-item label="性别">
 					<u-radio-group v-model="form.sex" style="height: 120rpx;">

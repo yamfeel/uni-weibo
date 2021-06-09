@@ -8,7 +8,7 @@
 			<view class="header-right">
 				<view class="userInfo-name">
 					<u-cell-group>
-						<u-cell-item :icon="this.GET_GENDER_ICON" :title="'UID：'+this.userInfo.userName"
+						<u-cell-item :icon="this.GET_GENDER_ICON?this.GET_GENDER_ICON:''" :title="'UID：'+this.userInfo.userName"
 							hover-class="cell-hover-class" @click="setting()"></u-cell-item>
 					</u-cell-group>
 				</view>
@@ -35,6 +35,14 @@
 			...mapGetters('user', [
 				'GET_GENDER_ICON'
 			]),
+		},
+		onShow() {
+			console.log(this.userInfo)
+			if (!this.userInfo) {
+				uni.navigateTo({
+					url: '../login/login'
+				})
+			}
 		},
 		methods: {
 			setting() {

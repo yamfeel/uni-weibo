@@ -1,0 +1,47 @@
+// 文档教程: https://uniapp.dcloud.net.cn/uniCloud/schema
+{
+	"bsonType": "object",
+	"required": ["fileName", "action", "created_date", "created_ip", "created_userName"],
+	"permission": {
+		"read": false,
+		"create": false,
+		"update": false,
+		"delete": false
+	},
+	"properties": {
+		"_id": {
+			"description": "ID，系统自动生成"
+		},
+		"fileName": {
+			"title": "文件名",
+			"bsonType": "string",
+			"trim": "both",
+			"description": "唯一"
+		},
+		"action": {
+			"title": "请求动作",
+			"bsonType": "string",
+			"trim": "both",
+			"description": "唯一"
+		},
+		"created_date": {
+			"bsonType": "timestamp",
+			"description": "创建时间"
+		},
+		"created_ip": {
+			"bsonType": "string",
+			"trim": "both",
+			"description": "创建时 IP 地址"
+		},
+		"created_userName": {
+			"bsonType":"string",
+			"trim": "both",
+			"description":"创建用户"
+		},
+		"state": {
+			"bsonType":"int",
+			"description":"文件状态：0.未删除或上传失败 1.缓存草稿未发布",
+			"defaultValue": "0"
+		}
+	}
+}
