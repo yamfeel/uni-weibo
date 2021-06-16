@@ -6,8 +6,10 @@ module.exports = class UtilsController extends (
 	Controller
 ) {
 	async fileCache() {
+		const action = this.ctx.data.action
 		const { userName } = this.ctx.userInfo
-		const data = await fileCacheCon.call(this, userName)
+		const data = await fileCacheCon.call(this, userName, action)
 		return data
 	}
+	
 }

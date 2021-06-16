@@ -1,90 +1,35 @@
 /**
- * @description user service
+ * @description upload service
  * @author yukee
  */
 
 const {
-	formatUser
-} = require("./_format.js")
-
-const {
 	Service
 } = require("uni-cloud-router")
-module.exports = class UserService extends(
+module.exports = class UploadService extends(
 	Service
 ) {
 	/**
-	 * 获取用户信息
+	 * 缓存文件状态
 	 * @param {string} userName 用户名
-	 * @param {string} password 密码
+	 * @param {string} action 缓存事件
 	 */
-	async getUserInfo(userName, password) {
-		// 查询条件
-		const whereOpt = {
-			userName
-		}
-		if (password) {
-			Object.assign(whereOpt, {
-				password
+	async fileCache(userName, action) {
+		const now = Date.now()
+		const fileName = now + '-' + Math.random().toString(16).split('.')[1]
+		const collerction = this.db.collection('files-cache')
+		const result = await collerction.add({
+			'fileName': fileName,
+			'action': action,
+			'created_date': now,
+			'created_userName': userName,
+			'created_ip': this.ctx.context.CLIENTIP,
+			'state': 0
 			})
-		}
-
-		// 查询
-		const collerction = this.db.collection('blog-user')
-		const result = await collerction.where(whereOpt).field({
-			'userName': true,
-			'email': true,
-			'gender': true,
-			'token': true,
-			'picture': true
-			}).get()
 		if (result == null) {
-			// 未找到
+			// 添加失败
 			return result
 		}
-
-		// 格式化
-		result.data = formatUser(result.data)
-		return result
-	}
-
-	/**
-	 * 注册新用户
-	 * @param {string} userName 
-	 * @param {string} password 
-	 * @param {number} gender 
-	 * @param {string} email 
-	 */
-	async createUser({
-		userName,
-		password,
-		gender = 2,
-		email
-	}) {
-		const collerction = this.db.collection('blog-user')
-		const result = await collerction.add({
-			userName,
-			password,
-			gender,
-			email,
-			'register_date': Date.now(),
-			'register_ip': this.ctx.context.CLIENTIP
-		})
-		return result
-	}
-	
-	/**
-	 * 设置token
-	 * @param {String} doc
-	 * @param {String} token
-	 */
-	async updateToken(id, token) {
-		const collerction = this.db.collection('blog-user')
-		const result = await collerction.doc(id).update({
-			'token': token,
-			'last_login_date': Date.now(),
-			'last_login_ip': this.ctx.context.CLIENTIP
-		})
-		return result
+		return fileName
 	}
 }

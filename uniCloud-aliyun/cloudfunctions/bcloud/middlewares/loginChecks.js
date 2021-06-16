@@ -39,7 +39,7 @@ async function loginCheck(ctx, next) {
 		}).update({ 'token': token.split('.')[2]})
 		ctx.data.token = token
 	}
-	next()
+	await next()
 }
 
 module.exports = () => loginCheck

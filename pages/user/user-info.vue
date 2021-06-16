@@ -54,7 +54,8 @@
 		},
 		computed: {
 			...mapState('user', [
-				'userInfo'
+				'userInfo',
+				'token'
 			]),
 			...mapGetters('user', [
 				'GET_GENDER_ICON'
@@ -67,6 +68,19 @@
 			uni.$on('uAvatarCropper', async filePath => {
 				this.avatar = filePath;
 				// 可以在此上传到服务端
+				// const fileCache = await 
+				const fileCache = await uniCloud.callFunction({
+					name:'bcloud',
+					data: {
+						action: 'router/utils/fileCache',
+						data: {
+							token: this.token,
+							action: 'fileCache'
+						}
+					}
+				})
+				return
+				// return console.log(fileCache)
 				const result = await uniCloud.uploadFile({
 					filePath: filePath,
 					cloudPath: Date.now() + Math.random().toString(16).split('.')[1] + '.jpg',
