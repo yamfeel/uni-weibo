@@ -33,7 +33,14 @@ class ErrorModel extends BaseModel {
 	}
 }
 
+function verityModel(data) {
+	const result = new SuccessModel(data)
+	result.message.token = this.ctx.token
+	return result
+}
+
 module.exports = {
 	SuccessModel,
-	ErrorModel 
+	ErrorModel,
+	verityModel
 }
