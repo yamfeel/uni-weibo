@@ -25,11 +25,19 @@ module.exports = class UploadService extends(
 			'created_userName': userName,
 			'created_ip': this.ctx.context.CLIENTIP,
 			'state': 0
-			})
+		})
 		if (result == null) {
 			// 添加失败
 			return result
 		}
 		return fileName
+	}
+
+	async delCache(userName, fileName) {
+		const collerction = this.db.collection('files-cache')
+		const result = collerction.where({
+			created_userName: userName
+		}).remove()
+		return result
 	}
 }

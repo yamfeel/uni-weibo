@@ -18,13 +18,14 @@ module.exports = class UtilsController extends(
 	}
 	async updatePicInfo() {
 		const {
-			picture: picOld,
-			fileName
+			picOld,
+			fileName,
+			fileID
 		} = this.ctx.data
 		const {
 			userName
 		} = this.ctx.userInfo
-		const data = await updatePicInfoCon.call(this, userName, picOld, fileName)
+		const data = await updatePicInfoCon.call(this, userName, picOld, fileName, fileID)
 		return data
 	}
 

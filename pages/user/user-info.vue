@@ -35,7 +35,8 @@
 <script>
 	import {
 		mapState,
-		mapGetters
+		mapGetters,
+		mapMutations
 	} from "vuex"
 	export default {
 		data() {
@@ -59,7 +60,7 @@
 			]),
 			...mapGetters('user', [
 				'GET_GENDER_ICON'
-			]),
+			])
 		},
 		onLoad() {
 			if (this.avatar == '') this.avatar = this.userInfo.picture
@@ -79,29 +80,44 @@
 						}
 					}
 				})
-				return
-				// return console.log(fileCache)
-				const result = await uniCloud.uploadFile({
+				const fileName = fileCache.result.data.fileName
+				const fileUpload = await uniCloud.uploadFile({
 					filePath: filePath,
-					cloudPath: Date.now() + Math.random().toString(16).split('.')[1] + '.jpg',
+					cloudPath: fileName+'.jpg',
 					onUploadProgress: function(progressEvent) {
-						console.log(progressEvent)
+						// console.log(progressEvent)
 						let percentCompleted = Math.round(
 							(progressEvent.loaded * 100) / progressEvent.total
 						)
 					}
 				})
-				console.log(result)
-				const delImg = await uniCloud.deleteFile({
-					fileList: [
-						// result.fileID,
-						'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-cbbd44a2-cab9-4a4f-ad23-df7212f0bced/68b4e28c-674e-46b1-91b4-c52236f319d9.jpg'
-					]
+				// console.log(fileUpload)
+				const updatePic = await uniCloud.callFunction({
+					name:'bcloud',
+					data: {
+						action: 'router/utils/updatePicInfo',
+						data: {
+							token: this.token,
+							picOld: this.userInfo.picture,
+							fileName: fileName,
+							fileID: fileUpload.fileID
+						}
+					}
 				})
-				console.log('del',delImg)
+				console.log('sdfssss',this.userInfo.picture)
+				console.log('sdfssss',updatePic)
+				if (updatePic.result.code == 0) {
+					const userInfo = this.userInfo
+					userInfo.picture = fileUpload.fileID
+					this.SET_USER_INFO(userInfo)
+				}
+				
 			})
 		},
 		methods: {
+			...mapMutations('user', [
+				'SET_USER_INFO'
+			]),
 			chooseAvatar() {
 				// 此为uView的跳转方法，详见"文档-JS"部分，也可以用uni的uni.navigateTo
 				this.$u.route({

@@ -37,7 +37,7 @@ module.exports = class UserService extends(
 			'gender': true,
 			'token': true,
 			'picture': true
-			}).get()
+		}).get()
 		if (result == null) {
 			// 未找到
 			return result
@@ -72,7 +72,7 @@ module.exports = class UserService extends(
 		})
 		return result
 	}
-	
+
 	/**
 	 * 设置token
 	 * @param {String} doc
@@ -84,6 +84,16 @@ module.exports = class UserService extends(
 			'token': token,
 			'last_login_date': Date.now(),
 			'last_login_ip': this.ctx.context.CLIENTIP
+		})
+		return result
+	}
+
+	async updatePic(userName, fileID) {
+		const collerction = this.db.collection('blog-user')
+		const result = await collerction.where({
+			'userName': userName
+		}).update({
+			'picture': fileID
 		})
 		return result
 	}

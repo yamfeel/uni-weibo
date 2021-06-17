@@ -4,7 +4,8 @@
 
 const {
 	SuccessModel,
-	ErrorModel
+	ErrorModel,
+	verityModel
 } = require("../../model/ResModel.js")
 const {
 	registerUserNameNotExistInfo,
@@ -13,7 +14,9 @@ const {
 	loginFailInfo
 } = require("../../model/ErrorInfo.js")
 
-const { DEFAULT_PICTURE } = require('../../conf/constant.js')
+const {
+	DEFAULT_PICTURE
+} = require('../../conf/constant.js')
 /**
  * 缓存临时文件状态
  * @param {string} userName 用户名
@@ -36,20 +39,24 @@ async function fileCache(userName, action) {
 }
 
 
-async function updatePicInfo(userName, picOld, fileName) {
-	// 1. 更新fileName 到 userInfo
-	userName, picOld, fileName
-	const updatePic = await this.service.updatePic(userName, fileName)
+async function updatePicInfo(userName, picOld, fileName, fileID) {
+	// 1. 更新fileID
+	const updatePic = await this.service.user.updatePic(userName, fileID)
 	// 2. 删除picOld 云储存
 	if (DEFAULT_PICTURE != picOld) {
 		const delImg = await uniCloud.deleteFile({
 			fileList: [picOld]
 		})
-		
+		console.log(';;;',picOld)
 	}
-	
 	// 3. 清楚fileName缓存
+	const delCache = this.service.upload.delCache(userName, fileName)
 	// 4. return verityModel
+	return verityModel.call(this, {
+		updatePic,
+		delCache,
+		picOld
+	})
 }
 module.exports = {
 	fileCache,

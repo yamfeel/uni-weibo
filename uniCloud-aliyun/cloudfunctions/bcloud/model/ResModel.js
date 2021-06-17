@@ -35,7 +35,7 @@ class ErrorModel extends BaseModel {
 
 function verityModel(data) {
 	const result = new SuccessModel(data)
-	result.message.token = this.ctx.token
+	result.token = this.ctx.data.token
 	return result
 }
 
