@@ -18,7 +18,7 @@
 		<u-popup v-model="show" mode="bottom" length="60%" :closeable="true" close-icon="close-circle">
 			<view v-show="nickNameModify" class="modify" style="margin: 50rpx; margin-top: 120rpx;">
 				<u-input placeholder="请输入昵称" v-model="value" type="text" :border="true" :clearable="false" />
-				<u-button @click="submit" style="margin-top: 30rpx;">保存</u-button>
+				<u-button @click="submitNickNameModify" style="margin-top: 30rpx;">保存</u-button>
 			</view>
 			<view v-show="passwordModify" class="modify" style="margin: 50rpx; margin-top: 120rpx;">
 				<u-input placeholder="请输入旧密码" v-model="pwd.oldPwd" type="password" :border="true" :clearable="false" />
@@ -118,6 +118,21 @@
 			...mapMutations('user', [
 				'SET_USER_INFO'
 			]),
+			submitNickNameModify() {
+				// return console.log(this.value)
+				uniCloud.callFunction({
+					name: 'bcloud',
+					data: {
+						action: 'router/user/changeInfo',
+						data: {
+							token: this.token,
+							nickName: this.value
+						}
+					}
+				}).then(res => {
+					console.log(res)
+				})
+			},
 			chooseAvatar() {
 				// 此为uView的跳转方法，详见"文档-JS"部分，也可以用uni的uni.navigateTo
 				this.$u.route({

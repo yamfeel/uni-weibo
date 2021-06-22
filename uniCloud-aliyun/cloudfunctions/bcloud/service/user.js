@@ -97,4 +97,14 @@ module.exports = class UserService extends(
 		})
 		return result
 	}
+	
+	async updateNickName(userName, nickName) {
+		const collerction = this.db.collection('blog-user')
+		const result = await collerction.where({
+			'userName': userName
+		}).update({
+			nickName
+		})
+		return result
+	}
 }

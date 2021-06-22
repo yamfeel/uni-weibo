@@ -112,8 +112,25 @@ async function login(userName, password) {
 	}
 }
 
+
+async function changeInfo(nickName) {
+	const {userName} = this.ctx.userInfo
+	if (!nickName) {
+		nickName = userName
+	}
+	// service
+	const result = await this.service.user.updateNickName(userName, nickName)
+	if (result.affectedDocs == 1) {
+		return new SuccessModel(result.data)
+	}
+	if (userInfo.affectedDocs != 1) {
+		return new ErrorModel(changeInfoFailInfo)
+	}
+}
+
 module.exports = {
 	isExist,
 	register,
-	login
+	login,
+	changeInfo
 }

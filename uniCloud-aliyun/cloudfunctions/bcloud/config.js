@@ -12,7 +12,7 @@ module.exports = {
 			genValidator(userValidate),
 			{
 				enable: true,
-				match: /\/register$/
+				match: /\/(register|changeInfo)$/
 			}
 		],
 		[
