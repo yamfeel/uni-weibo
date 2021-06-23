@@ -11,7 +11,9 @@ const {
 	registerUserNameNotExistInfo,
 	registerUserNameExistInfo,
 	registerFailInfo,
-	loginFailInfo
+	loginFailInfo,
+	changeInfoFailInfo,
+	changePasswordFailInfo
 } = require("../../model/ErrorInfo.js")
 
 
@@ -114,7 +116,9 @@ async function login(userName, password) {
 
 
 async function changeInfo(nickName) {
-	const {userName} = this.ctx.userInfo
+	const {
+		userName
+	} = this.ctx.userInfo
 	if (!nickName) {
 		nickName = userName
 	}
@@ -123,14 +127,26 @@ async function changeInfo(nickName) {
 	if (result.affectedDocs == 1) {
 		return new SuccessModel(result.data)
 	}
-	if (userInfo.affectedDocs != 1) {
+	if (result.affectedDocs != 1) {
 		return new ErrorModel(changeInfoFailInfo)
 	}
+}
+
+async function changePwd(userName, password, newPassword) {
+	const result = await this.service.user.updatePwd(userName, doCrypto(password), doCrypto(newPassword))
+	if (result.affectedDocs == 1) {
+		return new SuccessModel(result.data)
+	}
+	if (result.affectedDocs != 1) {
+		return new ErrorModel(changePasswordFailInfo)
+	}
+	
 }
 
 module.exports = {
 	isExist,
 	register,
 	login,
-	changeInfo
+	changeInfo,
+	changePwd
 }

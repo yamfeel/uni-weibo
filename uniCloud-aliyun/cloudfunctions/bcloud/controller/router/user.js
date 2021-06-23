@@ -60,4 +60,13 @@ module.exports = class UserController extends(
 		const result = await changeInfoCon.call(this, nickName)
 		return result
 	}
+	
+	/**
+	 * 修改密码
+	 */
+	async changePwd() {
+		const { userName } = this.ctx.userInfo
+		const { password, newPassword } = this.ctx.data
+		const result = await changePwdCon.call(this, userName, password, newPassword)
+	}
 }
