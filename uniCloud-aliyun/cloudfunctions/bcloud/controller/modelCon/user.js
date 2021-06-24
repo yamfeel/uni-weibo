@@ -135,7 +135,7 @@ async function changeInfo(nickName) {
 async function changePwd(userName, password, newPassword) {
 	const result = await this.service.user.updatePwd(userName, doCrypto(password), doCrypto(newPassword))
 	if (result.affectedDocs == 1) {
-		return new SuccessModel(result.data)
+		return new SuccessModel(result)
 	}
 	if (result.affectedDocs != 1) {
 		return new ErrorModel(changePasswordFailInfo)

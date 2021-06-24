@@ -29,6 +29,7 @@ export default {
 		    state.token = ''
 		    state.userInfo = {}
 		    uni.removeStorageSync('uni_id_token')
+		    uni.removeStorageSync('userInfo')
 		},
 		SET_USER_INFO: (state, userInfo) => {
 		    state.userInfo = userInfo

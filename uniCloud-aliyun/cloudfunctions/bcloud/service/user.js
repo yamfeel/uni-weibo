@@ -33,6 +33,7 @@ module.exports = class UserService extends(
 		const collerction = this.db.collection('blog-user')
 		const result = await collerction.where(whereOpt).field({
 			'userName': true,
+			'nickName': true,
 			'email': true,
 			'gender': true,
 			'token': true,
@@ -108,13 +109,14 @@ module.exports = class UserService extends(
 		return result
 	}
 	
-	async changePwd(userName, password, newPassword) {
+	async updatePwd(userName, password, newPassword) {
 		const collerction = this.db.collection('blog-user')
 		const result = await collerction.where({
 			userName,
 			password
 		}).update({
-			password: newPassword
+			password: newPassword,
+			token: ''
 		})
 		return result
 	}

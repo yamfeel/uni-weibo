@@ -3,7 +3,8 @@ const {
 	isExist: isExistCon,
 	register: registerCon,
 	login: loginCon,
-	changeInfo: changeInfoCon
+	changeInfo: changeInfoCon,
+	changePwd: changePwdCon
 } = require("../modelCon/user.js")
 
 // 继承uni-router.Controller 生成 controller 实例
@@ -68,5 +69,6 @@ module.exports = class UserController extends(
 		const { userName } = this.ctx.userInfo
 		const { password, newPassword } = this.ctx.data
 		const result = await changePwdCon.call(this, userName, password, newPassword)
+		return result
 	}
 }

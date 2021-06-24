@@ -26,9 +26,10 @@
 					style="margin-top: 30rpx;" :clearable="false" />
 				<u-input placeholder="请重复输入密码" v-model="pwd.rePwd" type="password" :border="true"
 					style="margin-top: 30rpx;" :clearable="false" />
-				<u-button @click="submit" style="margin-top: 30rpx;">修改</u-button>
+				<u-button @click="submitUpdatePwd" style="margin-top: 30rpx;">修改</u-button>
 			</view>
 		</u-popup>
+		<u-toast ref="uToast" />
 	</view>
 </template>
 
@@ -71,7 +72,7 @@
 				// 可以在此上传到服务端
 				// const fileCache = await 
 				const fileCache = await uniCloud.callFunction({
-					name:'bcloud',
+					name: 'bcloud',
 					data: {
 						action: 'router/utils/fileCache',
 						data: {
@@ -83,7 +84,7 @@
 				const fileName = fileCache.result.data.fileName
 				const fileUpload = await uniCloud.uploadFile({
 					filePath: filePath,
-					cloudPath: fileName+'.jpg',
+					cloudPath: fileName + '.jpg',
 					onUploadProgress: function(progressEvent) {
 						// console.log(progressEvent)
 						let percentCompleted = Math.round(
@@ -93,7 +94,7 @@
 				})
 				// console.log(fileUpload)
 				const updatePic = await uniCloud.callFunction({
-					name:'bcloud',
+					name: 'bcloud',
 					data: {
 						action: 'router/utils/updatePicInfo',
 						data: {
@@ -104,19 +105,20 @@
 						}
 					}
 				})
-				console.log('sdfssss',this.userInfo.picture)
-				console.log('sdfssss',updatePic)
+				console.log('sdfssss', this.userInfo.picture)
+				console.log('sdfssss', updatePic)
 				if (updatePic.result.code == 0) {
 					const userInfo = this.userInfo
 					userInfo.picture = fileUpload.fileID
 					this.SET_USER_INFO(userInfo)
 				}
-				
+
 			})
 		},
 		methods: {
 			...mapMutations('user', [
-				'SET_USER_INFO'
+				'SET_USER_INFO',
+				'REMOVE_TOKEN'
 			]),
 			submitNickNameModify() {
 				// return console.log(this.value)
@@ -131,6 +133,53 @@
 					}
 				}).then(res => {
 					console.log(res)
+				})
+			},
+			submitUpdatePwd() {
+				// return console.log(this.value)
+				if (this.pwd.rePwd != this.pwd.newPwd) {
+					return this.$refs.uToast.show({
+						title: '密码不一致',
+						type: 'error'
+					})
+				}
+				if (this.pwd.oldPwd == this.pwd.newPwd) {
+					return this.$refs.uToast.show({
+						title: '新密码和旧密码不能一致',
+						type: 'error'
+					})
+				}
+				uniCloud.callFunction({
+					name: 'bcloud',
+					data: {
+						action: 'router/user/changePwd',
+						data: {
+							token: this.token,
+							password: this.pwd.oldPwd,
+							newPassword: this.pwd.newPwd
+						}
+					}
+				}).then(res => {
+					if (res.result.code == 0) {
+						// this.REMOVE_TOKEN()
+						this.$refs.uToast.show({
+							title: '修改密码成功',
+							type: 'success',
+							callback: () => {
+								uni.navigateTo({
+									url: '../login/login'
+								})
+							}
+						})
+					} else {
+						if (res.result.code != 0) {
+							this.$refs.uToast.show({
+								title: '密码错误修改失败',
+								type: 'error'
+							})
+						}
+					}
+
 				})
 			},
 			chooseAvatar() {
